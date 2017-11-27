@@ -1,7 +1,8 @@
 import requests
 import json
 
-r = requests.get('https://api.github.com/repos/django/django')
+f = open("githubjson", "w")
+r = requests.get('https://api.github.com/repos/caolanb10/Compilers')
 if(r.ok):
     repoItem = json.loads(r.text or r.content)
-    print("Django repository created: " + repoItem['created_at'])
+    print(json.dumps(repoItem, sort_keys=True, indent = 3))
