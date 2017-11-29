@@ -1,0 +1,12 @@
+COMMANDS:
+.tables - show tables
+.database - shows database working on
+.mode (column, list, tabs) - changes mode of display
+.header (on, off) - turns on header
+.schema (table name) - displays schema for that table
+
+
+STATEMENTS:
+SELECT * FROM (TABLE) ;
+ALTER TABLE (TABLE) ADD COLUMN (COLUMN) ;
+ALTER TABLE table_name RENAME TO new_table_name;
