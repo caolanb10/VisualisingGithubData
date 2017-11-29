@@ -1,6 +1,4 @@
 
-#Github Data Visualisation
-
 ## Introduction
 This project is about retrieving data from Github's API, processing and storing it and creating a visualisation of this data.
 The data that I hope to create visualisations of is the data of a user's followers and who the user is following. I hope to make some type of directed graph
