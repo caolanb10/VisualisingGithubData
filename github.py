@@ -48,9 +48,8 @@ class user:
                                str(self.followers) + ','+ \
                                str(self.following) + ',' + str(self.trackedUser) + ')'
         return insertStatement
-request = requests.get('https://api.github.com/user', auth=('user', 'pass'))
-print(request.content or request.text)
-r = requests.get('https://api.github.com/users/WhelanB')
+auth = ('caolanb10', 'itzzCaolan10')
+r = requests.get('https://api.github.com/users/WhelanB', auth=auth)
 userJSON = json.loads(r.text or r.content)
 print(json.dumps(userJSON, indent = 4))
 firstUser = user(userJSON, 1)
@@ -64,18 +63,18 @@ c.execute(firstUser.insertStatement)
 
 counter = 0
 while(counter<100):
-    userFollowers = requests.get(userJSON['followers_url'])
+    userFollowers = requests.get(userJSON['followers_url'], auth=auth)
     followersJSON = json.loads(userFollowers.text or userFollowers.content)
     print(json.dumps(followersJSON, indent = 4))
-    userFollowing = requests.get(newURLchopper(userJSON['following_url']))
+    userFollowing = requests.get(newURLchopper(userJSON['following_url']), auth=auth)
     followingJSON = json.loads(userFollowing.text or userFollowing.text)
     for x in range(0, len(followersJSON)):
         followers = []
-        afollower = requests.get(followersJSON[x]['url'])
+        afollower = requests.get(followersJSON[x]['url'], auth=auth)
         afollower1 = json.loads(afollower.text or afollower.content)
-        followedUser = user(json.loads(afollower.text or afollower.content), 0)
+        followedUser = (afollower1, 0)
         counter+=1
-        followers.append(afollower1)
+        followers.append(followedUser)
         for xx in range(0, len(followers)):
             c.execute(followers[xx].insertStatement)
             c.execute(followerInsertStatement(firstUser, followers[xx]))
@@ -83,7 +82,7 @@ while(counter<100):
         print(followers[x].insertStatement)
     for y in range(0, len(followingJSON)):
         following = []
-        afollowing = requests.get(followingJSON[y]['url'])
+        afollowing = requests.get(followingJSON[y]['url'], auth =auth)
         followingUser = user(json.loads(afollowing.text or afollowing.content), 0)
         counter+=1
         following.append(followingUser)
