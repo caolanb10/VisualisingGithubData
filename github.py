@@ -71,6 +71,7 @@ c.execute(firstUser.insertStatement)
 
 counter = 0
 idList = []
+idList.append(firstUser.id)
 
 while(counter<100):
     userFollowing = requests.get(newURLchopper(userJSON['following_url']), auth=auth)
@@ -78,31 +79,35 @@ while(counter<100):
     followersJSON = json.loads(userFollowers.text or userFollowers.content)
     followingJSON = json.loads(userFollowing.text or userFollowing.text)
     for x in range(0, len(followersJSON)):
+        print(idList)
         followers = []
         afollower = requests.get(followersJSON[x]['url'], auth=auth)
         afollower1 = json.loads(afollower.text or afollower.content)
-        followedUser = user(afollower1, 0)
-        counter+=1
-        followers.append(followedUser)
-        idList.append(followedUser.id)
-        for xx in range(0, len(followers)):
-            userInput = followers[xx]
-            c.execute(userInput.insertStatement)
-            c.execute(followerInsertStatement(firstUser, followers[xx]))
+        userId = afollower1['id']
+        if userId not in idList:
+            idList.append(userId)
+            followedUser = user(afollower1, 0)
+            counter+=1
+            followers.append(followedUser)
+            for xx in range(0, len(followers)):
+                c.execute(followers[xx].insertStatement)
+                c.execute(followerInsertStatement(firstUser, followers[xx]))
     print("------------done------------")
-    print(json.dumps(followingJSON, indent=4))
     for y in range(0, len(followingJSON)):
+        print(idList)
         following = []
         afollowing = requests.get(followingJSON[y]['url'], auth =auth)
         afollowing1=json.loads(afollowing.text or afollowing.content)
-        followingUser = user(afollowing1, 0)
-        counter+=1
-        following.append(followingUser)
-        if followingUser.id not in idList:
+        userId = afollowing1['id']
+        if userId not in idList:
+            idList.append(userId)
+            followingUser = user(afollowing1, 0)
+            counter+=1
+            following.append(followingUser)
             idList.append(followingUser.id)
-        for yy in range(0, len(following)):
-            userInput = following[yy]
-            c.execute(userInput.insertStatement)
-            c.execute(followingInsertStatement(firstUser, following[yy]))
-    nextUser = requests.get(followingJSON[random.randrange(len(followingJSON))]['url'], auth=auth)
+            for yy in range(0, len(following)):
+                c.execute(following[yy].insertStatement)
+                c.execute(followingInsertStatement(firstUser, following[yy]))
+    nextUser = requests.get(followersJSON[random.randrange(len(followersJSON))]['url'], auth=auth)
     userJSON = json.loads(nextUser.text or nextUser.content)
+    firstUser = user(userJSON, 0)
