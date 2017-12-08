@@ -1,5 +1,7 @@
 import requests
 import json
+import _random
+import random
 import sqlite3
 
 def newURLchopper(url):
@@ -16,28 +18,34 @@ def followingInsertStatement(firstUser, follower):
     return insertStatement
 
 class user:
+    login = 'NULL'
     id = 'NULL'
     name = 'NULL'
     location = 'NULL'
     repos = 'NULL'
     userSince = 'NULL'
-    company = 'NULL'
     followers = 'NULL'
     following = 'NULL'
     trackedUser = 'NULL'
     insertStatement = 'NULL'
 
     def __init__(self, userJSON, tracked):
+        self.login = userJSON['login']
         self.id = userJSON['id']
         self.name = userJSON['name']
         self.location = userJSON['location']
         self.repos = userJSON['public_repos']
         self.userSince = userJSON['created_at']
-        self.company = userJSON['company']
         self.followers = userJSON['followers']
         self.following = userJSON['following']
         self.trackedUser = tracked
+        if self.name is None:
+            self.name = self.login
+        if self.location is None:
+            self.location = "No location"
         self.insertStatement = self.createInsertStatement()
+        print(self.name)
+        print(self.id)
 
     def createInsertStatement(self):
         insertStatement = 'INSERT INTO User VALUES(' + str(self.id) + ',"' + \
@@ -62,31 +70,39 @@ print(firstUser.insertStatement)
 c.execute(firstUser.insertStatement)
 
 counter = 0
+idList = []
+
 while(counter<100):
+    userFollowing = requests.get(newURLchopper(userJSON['following_url']), auth=auth)
     userFollowers = requests.get(userJSON['followers_url'], auth=auth)
     followersJSON = json.loads(userFollowers.text or userFollowers.content)
-    print(json.dumps(followersJSON, indent = 4))
-    userFollowing = requests.get(newURLchopper(userJSON['following_url']), auth=auth)
     followingJSON = json.loads(userFollowing.text or userFollowing.text)
     for x in range(0, len(followersJSON)):
         followers = []
         afollower = requests.get(followersJSON[x]['url'], auth=auth)
         afollower1 = json.loads(afollower.text or afollower.content)
-        followedUser = (afollower1, 0)
+        followedUser = user(afollower1, 0)
         counter+=1
         followers.append(followedUser)
+        idList.append(followedUser.id)
         for xx in range(0, len(followers)):
-            c.execute(followers[xx].insertStatement)
+            userInput = followers[xx]
+            c.execute(userInput.insertStatement)
             c.execute(followerInsertStatement(firstUser, followers[xx]))
-    for x in range(0, len(followers)):
-        print(followers[x].insertStatement)
+    print("------------done------------")
+    print(json.dumps(followingJSON, indent=4))
     for y in range(0, len(followingJSON)):
         following = []
         afollowing = requests.get(followingJSON[y]['url'], auth =auth)
-        followingUser = user(json.loads(afollowing.text or afollowing.content), 0)
+        afollowing1=json.loads(afollowing.text or afollowing.content)
+        followingUser = user(afollowing1, 0)
         counter+=1
         following.append(followingUser)
+        if followingUser.id not in idList:
+            idList.append(followingUser.id)
         for yy in range(0, len(following)):
-            c.execute(following[yy].insertStatement)
+            userInput = following[yy]
+            c.execute(userInput.insertStatement)
             c.execute(followingInsertStatement(firstUser, following[yy]))
-    userJSON = requests.get(followingJSON[0]['url'])
+    nextUser = requests.get(followingJSON[random.randrange(len(followingJSON))]['url'], auth=auth)
+    userJSON = json.loads(nextUser.text or nextUser.content)
