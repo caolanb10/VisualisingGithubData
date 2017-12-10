@@ -10,3 +10,7 @@ For this project I am using the python programming language in conjunction with 
 ## Steps Involved
 I have subdivided this project into two distinct steps which will be represented as two distinct scripts. The first one will access github's API and extract the necessary user data and the user data of that user's followers and those they are following. Then this data will be processed and then inserted into a relational database.
 The second step is creating a webserver that interacts with this database and creates visualisations from the data stored in the database, the language used for the scripts used on the webpage will be javascript.
+
+## Progress
+I have managed to complete my web crawl on the user data, I have altered my implication by limiting the number of followers or users that the user is following to 10
+as my crawl allowed for one users data to fully complete the crawl which didnt very much crawl very far.
