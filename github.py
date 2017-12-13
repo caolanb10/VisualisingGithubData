@@ -59,10 +59,13 @@ class user:
         return insertStatement
 
 #authorisation with auth token
-auth = ('caolanb10', '0dfbdf801f501ddcf571e61de3283299321ecd6a')
+auth = ('caolanb10', 'itzzCaolan10')
+
+
+
+
 r = requests.get('https://api.github.com/users/WhelanB', auth=auth)     #an account with followers and is following people
 userJSON = json.loads(r.text or r.content)
-print(json.dumps(userJSON, indent = 4))
 firstUser = user(userJSON, 1)
 conn = sqlite3.connect('githubDb.db', isolation_level=None)
 c = conn.cursor()
@@ -77,10 +80,7 @@ c.execute("create table UserFollowers(userid int, followerid int, PRIMARY KEY(us
           "FOREIGN KEY (userid) REFERENCES User(id), "
           "FOREIGN KEY (followerid) REFERENCES User(id))")
 
-print(firstUser.insertStatement)
 c.execute(firstUser.insertStatement)
-
-
 #Github crawl loop
 
 counter = 0
@@ -119,7 +119,7 @@ while(counter<100):
             idList.append(followingUser.id)
             for yy in range(0, 10 if len(following) > 10 else len(following)):                                                 #If they havent they are entered into the database
                 c.execute(following[yy].insertStatement)
-                c.execute(followingInsertStatement(firstUser, following[yy]))
+                c.execute(followingInsertStatement(following[yy], firstUser))
 
     nextUser = requests.get(followersJSON[random.randrange(10 if len(followers) > 10 else len(followers))]['url'], auth=auth)
     userJSON = json.loads(nextUser.text or nextUser.content)
