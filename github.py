@@ -58,7 +58,7 @@ class user:
         return insertStatement
 
 #authorisation with auth token
-
+auth = ("caolanb10" ,"itzzCaolan10")
 r = requests.get('https://api.github.com/users/WhelanB', auth=auth)     #an account with followers and is following people
 userJSON = json.loads(r.text or r.content)
 firstUser = user(userJSON, 1)
@@ -81,7 +81,7 @@ c.execute(firstUser.insertStatement)
 counter = 0
 idList = []
 idList.append(firstUser.id)
-while(counter<200):
+while(counter<50):
     userFollowing = requests.get(newURLchopper(userJSON['following_url']), auth=auth)
     userFollowers = requests.get(userJSON['followers_url'], auth=auth)
     followersJSON = json.loads(userFollowers.text or userFollowers.content)                     #creates list of followeres
