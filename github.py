@@ -91,8 +91,7 @@ while(counter<100):
     userFollowers = requests.get(userJSON['followers_url'], auth=auth)
     followersJSON = json.loads(userFollowers.text or userFollowers.content)                     #creates list of followeres
     followingJSON = json.loads(userFollowing.text or userFollowing.text)                        #creates list of following
-    for x in range(0, len(followersJSON)):                                                      #loops through each follower and generates statement for tables
-        followers = []
+    for x in range(0, 6 if len(followersJSON)> 6 else len(followersJSON)):                                                      #loops through each follower and generates statement for tables
         afollower = requests.get(followersJSON[x]['url'], auth=auth)
         afollower1 = json.loads(afollower.text or afollower.content)                            #loads user and checks if user has been passed before
         userId = afollower1['id']
@@ -100,14 +99,10 @@ while(counter<100):
             idList.append(userId)
             followedUser = user(afollower1, 0)
             counter+=1                                                                          #If they havent they are entered into the database
-            followers.append(followedUser)
-            for xx in range(0,10 if len(followers) > 10 else len(followers)):
-                c.execute(followers[xx].insertStatement)
-                c.execute(followerInsertStatement(firstUser, followers[xx]))
+            c.execute(followedUser.insertStatement)
+            c.execute(followerInsertStatement(firstUser, followedUser))
 
-
-    for y in range(0, len(followingJSON)):                                                      #loops through each user their following                                                                        #and generates statement for tables
-        following = []
+    for y in range(0, 6 if len(followingJSON)>6 else len(followingJSON)):                                                      #loops through each user their following                                                                        #and generates statement for tables
         afollowing = requests.get(followingJSON[y]['url'], auth =auth)
         afollowing1=json.loads(afollowing.text or afollowing.content)
         userId = afollowing1['id']
@@ -115,12 +110,10 @@ while(counter<100):
             idList.append(userId)
             followingUser = user(afollowing1, 0)
             counter+=1                                                                          #loads user and checks if user has been passed before
-            following.append(followingUser)
-            idList.append(followingUser.id)
-            for yy in range(0, 10 if len(following) > 10 else len(following)):                                                 #If they havent they are entered into the database
-                c.execute(following[yy].insertStatement)
-                c.execute(followingInsertStatement(following[yy], firstUser))
+            idList.append(followingUser.id)                                                #If they havent they are entered into the database
+            c.execute(followingUser.insertStatement)
+            c.execute(followingInsertStatement(followingUser, firstUser))
 
-    nextUser = requests.get(followersJSON[random.randrange(10 if len(followers) > 10 else len(followers))]['url'], auth=auth)
+    nextUser = requests.get(followersJSON[random.randrange(10 if len(followersJSON) > 10 else len(followersJSON))]['url'], auth=auth)
     userJSON = json.loads(nextUser.text or nextUser.content)
-    firstUser = user(userJSON, 0)
+    firstUser = user(userJSON, 0)           # 0 here indicates this is not the very first user just the next one were crawling to
