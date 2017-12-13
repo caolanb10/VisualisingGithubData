@@ -18,6 +18,7 @@ as my crawl allowed for one users data to fully complete the crawl which didnt v
 My crawl now allows for 6 followers and 6 users theyre following to be added to the graph, i did this to get greater disparity from the visualisation.
 I decided against using d3.js as none of the templates really satisfied my idea of a directed graph.
 I decided to use matplotlib and networkX for the graphs instead.
+The crawl collects ~100 users and each user where follower information was collected has degree 12 (6 in degree, 6 out degree)
 
 ## Customising the graph size
 The counter in the github script counts how many users we are putting on our graph, by customising this number we can define how many users we want our graph to span.

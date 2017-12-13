@@ -82,7 +82,7 @@ c.execute(firstUser.insertStatement)
 counter = 0
 idList = []
 idList.append(firstUser.id)
-while(counter<100):
+while(counter<200):
     userFollowing = requests.get(newURLchopper(userJSON['following_url']), auth=auth)
     userFollowers = requests.get(userJSON['followers_url'], auth=auth)
     followersJSON = json.loads(userFollowers.text or userFollowers.content)                     #creates list of followeres
