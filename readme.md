@@ -19,10 +19,10 @@ My crawl now allows for 6 followers and 6 users theyre following to be added to 
 I decided against using d3.js as none of the templates really satisfied my idea of a directed graph.
 I decided to use matplotlib and networkX for the graphs instead.
 
-##Customising the graph size
+## Customising the graph size
 The counter in the github script counts how many users we are putting on our graph, by customising this number we can define how many users we want our graph to span.
 
-##Libraries Used
+## Libraries Used
 NetworkX
 SQLite3
 Requests
