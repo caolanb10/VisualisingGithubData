@@ -21,3 +21,11 @@ I decided to use matplotlib and networkX for the graphs instead.
 
 ##Customising the graph size
 The counter in the github script counts how many users we are putting on our graph, by customising this number we can define how many users we want our graph to span.
+
+##Libraries Used
+NetworkX
+SQLite3
+Requests
+JSON
+Random
+Matplotlib

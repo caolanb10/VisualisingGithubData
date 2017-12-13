@@ -1,6 +1,5 @@
 import requests
 import json
-import _random
 import random
 import sqlite3
 # function for taking parentheses from end of URL
@@ -60,9 +59,6 @@ class user:
 
 #authorisation with auth token
 auth = ('caolanb10', 'itzzCaolan10')
-
-
-
 
 r = requests.get('https://api.github.com/users/WhelanB', auth=auth)     #an account with followers and is following people
 userJSON = json.loads(r.text or r.content)
